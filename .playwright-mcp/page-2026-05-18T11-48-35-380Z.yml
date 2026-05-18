@@ -1,0 +1,15 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - heading "Data Quality Checker" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Upload a CSV file to check data quality with AI-powered analysis
+  - main [ref=e7]:
+    - generic [ref=e8]:
+      - heading "Upload CSV File" [level=2] [ref=e9]
+      - button "Drag and drop CSV file here or click to select" [active] [ref=e10] [cursor=pointer]:
+        - generic:
+          - paragraph: 📁
+          - paragraph: "Selected: test.csv"
+          - paragraph: or click to browse
+      - button "Analyse" [ref=e11] [cursor=pointer]
+  - contentinfo [ref=e12]:
+    - paragraph [ref=e13]: Powered by n8n & Claude AI

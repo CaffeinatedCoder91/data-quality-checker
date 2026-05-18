@@ -31,7 +31,26 @@ describe('useQualityCheck', () => {
   it('handles successful API response', async () => {
     const { result } = renderHook(() => useQualityCheck());
 
-    const mockResponse = {
+    const mockN8NResponse = {
+      summary: {
+        totalRows: 1,
+        totalIssues: 1,
+      },
+      findings: [
+        {
+          rowNumber: 1,
+          issues: [
+            {
+              field: 'email',
+              message: 'Invalid email format',
+              severity: 'high' as const,
+            },
+          ],
+        },
+      ],
+    };
+
+    const expectedReport = {
       totalRows: 1,
       issuesFound: 1,
       results: [
@@ -47,7 +66,7 @@ describe('useQualityCheck', () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(mockResponse),
+        json: () => Promise.resolve(mockN8NResponse),
       } as Response),
     );
 
@@ -58,7 +77,7 @@ describe('useQualityCheck', () => {
     });
 
     expect(result.current.state).toBe('success');
-    expect(result.current.report).toEqual(mockResponse);
+    expect(result.current.report).toEqual(expectedReport);
     expect(result.current.error).toBeNull();
   });
 

@@ -1,6 +1,21 @@
 import { useState } from 'react';
 import type { CSVRow, QualityReport, AppState } from '../../types';
 
+interface N8NWebhookResponse {
+  summary: {
+    totalRows: number;
+    totalIssues: number;
+  };
+  findings: Array<{
+    rowNumber: number;
+    issues: Array<{
+      field: string;
+      message: string;
+      severity: 'low' | 'medium' | 'high';
+    }>;
+  }>;
+}
+
 interface UseQualityCheckResult {
   analyse: (rows: CSVRow[]) => Promise<void>;
   report: QualityReport | null;
@@ -39,8 +54,24 @@ export function useQualityCheck(): UseQualityCheckResult {
         throw new Error(`Webhook returned status ${response.status}`);
       }
 
-      const data = (await response.json()) as QualityReport;
-      setReport(data);
+      const rawData = (await response.json()) as N8NWebhookResponse;
+
+      const qualityIssues: QualityReport['results'] = rawData.findings.flatMap((finding) =>
+        finding.issues.map((issue) => ({
+          row: finding.rowNumber,
+          field: issue.field,
+          issue: issue.message,
+          severity: issue.severity,
+        })),
+      );
+
+      const report: QualityReport = {
+        totalRows: rawData.summary.totalRows,
+        issuesFound: rawData.summary.totalIssues,
+        results: qualityIssues,
+      };
+
+      setReport(report);
       setState('success');
     } catch (analyseError) {
       const message =
