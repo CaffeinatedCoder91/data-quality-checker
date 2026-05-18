@@ -6,6 +6,7 @@ interface UseFileUploadResult {
   file: File | null;
   parsedData: CSVRow[];
   handleFileSelect: (selectedFile: File) => Promise<void>;
+  reset: () => void;
   error: string | null;
 }
 
@@ -40,10 +41,17 @@ export function useFileUpload(): UseFileUploadResult {
     }
   };
 
+  const reset = (): void => {
+    setFile(null);
+    setParsedData([]);
+    setError(null);
+  };
+
   return {
     file,
     parsedData,
     handleFileSelect,
+    reset,
     error,
   };
 }

@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+# Data Quality Checker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A demo application for checking data quality in CSV files using AI-powered analysis with Claude and n8n.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **CSV File Upload** — Drag-and-drop or click to select CSV files (max 1MB)
+- **AI-Powered Analysis** — Claude analyzes each row for quality issues via n8n
+- **Quality Report** — View issues organized by row and field with severity levels
+- **Accessible UI** — ARIA labels, keyboard navigation, screen reader support
+- **Responsive Design** — Works on desktop and mobile devices
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 18+
+- n8n instance with Claude/Anthropic integration
+- Claude API access
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Configuration
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env.local` file with your n8n webhook URL:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+VITE_N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/your-webhook-id
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Testing
+
+```bash
+npm test
+npm test:ui        # interactive test UI
+npm test:coverage  # coverage report
+```
+
+### Build
+
+```bash
+npm run build
+```
+
+## Important: Rate Limits
+
+This is a **demo application**. The default Claude API plan has a **5 requests per minute limit**.
+
+- Each CSV row is analyzed in a separate request
+- A 10-row CSV = 10 requests → **exceeds the 5/min limit**
+- Test with **3-4 rows max** to stay under the limit
+
+To use with larger files:
+1. **Upgrade your Claude API rate limit** — Contact Anthropic sales
+2. **Batch rows in n8n** — Analyze multiple rows per request
+3. **Add delays in n8n** — Space requests out over time
+
+## Architecture
+
+- **Frontend**: React 18 + TypeScript + Vite
+- **Styling**: Plain CSS (no frameworks)
+- **State**: React hooks (useState)
+- **HTTP**: Native fetch API
+- **Testing**: Vitest + @testing-library/react
+- **Analysis**: Claude AI via n8n webhook
+
+## File Structure
+
+```
+src/
+  components/          ← UI components (FileUpload, ResultsTable, etc.)
+  hooks/               ← Custom hooks (useFileUpload, useQualityCheck)
+  types/               ← TypeScript type definitions
+  utils/               ← Helper functions (csvParser, formatters)
+  App.tsx              ← Main application component
+  index.css            ← Global styles
+```
+
+## Code Standards
+
+- TypeScript strict mode
+- Functional components only
+- No external UI libraries
+- No abbreviations in variable/function names
+- Full test coverage
+- Accessible HTML
+
+## License
+
+MIT

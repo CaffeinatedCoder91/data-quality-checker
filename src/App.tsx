@@ -28,7 +28,7 @@ export function App() {
 
   function handleStartOver(): void {
     setCurrentView('upload');
-    fileUploadHook.handleFileSelect(null as unknown as File).catch(() => {});
+    fileUploadHook.reset();
   }
 
   const renderContent = (): React.ReactNode => {
