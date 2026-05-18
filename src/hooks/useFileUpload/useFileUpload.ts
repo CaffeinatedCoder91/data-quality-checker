@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { CSVRow } from '../types';
-import { parseCSV } from '../utils/csvParser';
+import type { CSVRow } from '../../types';
+import { parseCSV } from '../../utils/csvParser';
 
 interface UseFileUploadResult {
   file: File | null;
@@ -17,7 +17,9 @@ export function useFileUpload(): UseFileUploadResult {
   const handleFileSelect = async (selectedFile: File): Promise<void> => {
     setError(null);
 
-    if (selectedFile.type !== 'text/csv' && !selectedFile.name.endsWith('.csv')) {
+    const hasValidExtension = selectedFile.name.toLowerCase().endsWith('.csv');
+
+    if (!hasValidExtension) {
       setError('Please select a valid CSV file');
       return;
     }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CSVRow, QualityReport, AppState } from '../types';
+import type { CSVRow, QualityReport, AppState } from '../../types';
 
 interface UseQualityCheckResult {
   analyse: (rows: CSVRow[]) => Promise<void>;

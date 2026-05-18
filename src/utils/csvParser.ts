@@ -1,7 +1,19 @@
 import type { CSVRow } from '../types';
 
 export async function parseCSV(file: File): Promise<CSVRow[]> {
-  const text = await file.text();
+  let text: string;
+
+  if (typeof file.text === 'function') {
+    text = await file.text();
+  } else {
+    text = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsText(file);
+    });
+  }
+
   const lines = text.trim().split('\n');
 
   if (lines.length < 2) {
