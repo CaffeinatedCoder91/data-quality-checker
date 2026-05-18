@@ -62,7 +62,7 @@ export function App() {
       <FileUpload
         onFileSelect={handleFileSelect}
         onSubmit={handleAnalysisSubmit}
-        isLoading={qualityCheckHook.state === 'loading'}
+        isLoading={false}
         selectedFile={fileUploadHook.file}
         uploadError={fileUploadHook.error || undefined}
       />

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import type { FileUploadProps, FileUploadState } from './fileUpload.types';
+import type { FileUploadProps } from './fileUpload.types';
 
 export function FileUpload({
   onFileSelect,
@@ -11,8 +11,6 @@ export function FileUpload({
 }: FileUploadProps) {
   const fileInputReference = useRef<HTMLInputElement>(null);
   const dropZoneReference = useRef<HTMLDivElement>(null);
-
-  const currentState: FileUploadState = isLoading ? 'loading' : selectedFile ? 'selected' : 'idle';
 
   function handleFileInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const file = event.target.files?.[0];
